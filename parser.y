@@ -337,7 +337,7 @@ function_definition
         std::string complete_type = base_type + " " + func_name + "(" + params + ")";
         
         // Add function name to symbol table with complete type
-        add_symbol(func_name.c_str(), "function");
+        add_symbol(func_name.c_str(), complete_type.c_str());
         
         delete $1; delete $2; delete $4;
     }
@@ -348,7 +348,7 @@ function_definition
         std::string complete_type = base_type + " " + func_name + "()";
         
         // Add function name to symbol table with complete type
-        add_symbol(func_name.c_str(), "function");
+        add_symbol(func_name.c_str(), complete_type.c_str());
         
         delete $1; delete $2;
     }
@@ -360,7 +360,7 @@ function_definition
         std::string complete_type = determine_complete_type(base_type, declarator_str);
         
         // Add function name to symbol table with complete type
-        add_symbol(actual_name.c_str(), "function");
+        add_symbol(actual_name.c_str(), complete_type.c_str());
         
         delete $1; delete $2;
     }
@@ -375,7 +375,7 @@ function_declaration
         std::string complete_type = base_type + " " + func_name + "(" + params + ")";
         
         // Add function declaration to symbol table with complete type
-        add_symbol(func_name.c_str(), "function");
+        add_symbol(func_name.c_str(), complete_type.c_str());
         
         delete $1; delete $2; delete $4;
     }
@@ -386,7 +386,7 @@ function_declaration
         std::string complete_type = base_type + " " + func_name + "()";
         
         // Add function declaration to symbol table with complete type
-        add_symbol(func_name.c_str(), "function");
+        add_symbol(func_name.c_str(), complete_type.c_str());
         
         delete $1; delete $2;
     }
@@ -398,7 +398,7 @@ function_declaration
         std::string complete_type = determine_complete_type(base_type, declarator_str);
         
         // Add function declaration to symbol table with complete type
-        add_symbol(actual_name.c_str(), "function");
+        add_symbol(actual_name.c_str(), complete_type.c_str());
         
         delete $1; delete $2;
     }
@@ -854,10 +854,14 @@ postfix_expression
         delete $3;
     }
     | KW_PRINTF '(' argument_expression_list ')' {
+        // Add printf to symbol table as a function call
+        add_symbol("printf", "function");
         $$ = my_strdup("printf(" + *$3 + ")");
         delete $3;
     }
     | KW_SCANF '(' argument_expression_list ')' {
+        // Add scanf to symbol table as a function call
+        add_symbol("scanf", "function");
         $$ = my_strdup("scanf(" + *$3 + ")");
         delete $3;
     }
